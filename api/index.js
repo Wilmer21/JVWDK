@@ -10,11 +10,11 @@ conn.sync({ force: false}).then(() => {
   app.listen(3000, () => { 
     console.log('%s listening at 3000'); 
     //  User.create({
-    //    email: "dager@gmail.com",
-    //    password: "dager",
-    //    first_name: "Lean",
-    //    last_name: "Nicolau",
-    //    phone_number: "3517728831",
+    //    email: "wilmer@gmail.com",
+    //    password: "wilmer",
+    //    first_name: "Wilmer",
+    //    last_name: "Olarte",
+    //    phone_number: "3115170002",
     //    user_role: "admin"
     // });
   });

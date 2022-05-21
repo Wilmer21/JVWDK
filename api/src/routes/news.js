@@ -117,7 +117,7 @@ server.post('/', async (req, res) =>{	 //crear la noticia
 
 
 server.put('/:id', async (req, res) =>{  // actuliazar la noticia
-	const newt = await newt.findByPk(req.params.id)
+	const newt = await New.findByPk(req.params.id)
 	Object.assign(newt, req.body.form)
 	newt.save()
 	 .then(response =>{
@@ -198,26 +198,28 @@ server.get('/news-detail/:newId', async (req, res) => { // detalle de la noticia
 // url base http://localhost:3000/news/catalog/?page=1&pageSize=1
 // es para mostrar todas las noticias en un catalogo
 server.get('/catalog/', (req, res) => {
+	console.log(req.query);
 	let categories = req.query.categories && JSON.parse(req.query.categories);
-	let {priceFrom, priceTo, rating, page, pageSize} = req.query;
+	let { rating, page, pageSize} = req.query;
 	var options = {where: {}, include: []};
 	if (categories){
+		console.log("primera entrada");
 		options.include = {model: Category, where: {id: categories}}; 
-	}
-	if (priceFrom & priceTo){
-		options.where.price =  {[Sequelize.Op.between]: [priceFrom, priceTo]}; 
 	}
 	
 	if (page && pageSize){
+		console.log("segunda entrada");
 		var offSet;
 		var totalNews = 0;
 		(page === 1) ? offSet=0 : offSet = (page - 1) * pageSize;
 		options.limit = pageSize;
 		options.offset = offSet;
 	}
+
 	New.count(options)
 	.then(count =>{
 		totalNews = count; 
+		console.log(totalNews);
 		New.findAll(options)
 		.then(newt => {
 			!newt.length && res.send("No hay productos");

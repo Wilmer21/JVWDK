@@ -24,5 +24,35 @@ server.post("/logout", passport.authenticate('jwt', { session: false }), (req, r
 })
 
 
+server.put("/promote/:id", passport.authenticate('jwt', { session: false }), async (req, res) =>{
+  const user = await User.findByPk(req.user)
+  if(user.user_role === 'admin') {
+  const user = await User.findByPk(req.params.id)
+  user.user_role = "admin"
+  user.save()
+  .then(user=>{
+    res.send(user)
+  })
+  .catch(err=>{
+    res.send(err)
+  })}
+
+})
+
+server.put("/user/promote/:id", passport.authenticate('jwt', { session: false }), async (req, res) =>{
+  const user = await User.findByPk(req.user)
+  if(user.user_role === 'admin') {
+  const user = await User.findByPk(req.params.id)
+  user.user_role = "user"
+  user.save()
+  .then(user=>{
+    res.send(user)
+  })
+  .catch(err=>{
+    res.send(err)
+  })}
+
+})
+
 
 module.exports = server;

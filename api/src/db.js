@@ -9,10 +9,15 @@ const {
 } = process.env;
 
 //aqui se hace la conexion con la base de datos, se usa secualize un ORM que nos ayuda a gestionar muy rapido los procesos
-const sequelize = new Sequelize(`${DB_NAME}`, `${DB_USER}`, `${DB_PASSWORD}`, {
-  host: "127.0.0.1",
-  dialect : 'mysql',
-  operatorsAliases: false
+// const sequelize = new Sequelize(`${DB_NAME}`, `${DB_USER}`, `${DB_PASSWORD}`, {
+//   host: "127.0.0.1",
+//   dialect : 'mysql',
+//   operatorsAliases: false
+// });
+
+const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/jvwdk`, {
+  logging: false, // set to console.log to see the raw SQL queries
+  native: false, // lets Sequelize know we can use pg-native for ~30% more speed
 });
 
 const basename = path.basename(__filename);

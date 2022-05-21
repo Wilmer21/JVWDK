@@ -38,6 +38,54 @@ server.post('/', async (req, res) => {
     }
 });
 
+server.get('/',  async(req, res, next) => {
+    console.log(req.user);
+    const user = await User.findByPk(req.user)
+
+    User.findAll()
+    .then(response =>{
+        res.send(response)
+    })
+    .catch(err => {
+        res.send(err.message)
+    })
+
+    // if(user.user_role === 'admin') {
+    // User.findAll()
+    // .then(response =>{
+    //     res.send(response)
+    // })
+    // .catch(next)
+    // } else
+    // {
+    //     res.status(401).send({message: 'not authorized'})
+    // }
+});
+
+server.delete('/:userId', async (req, res) => {
+    const user = await User.findByPk(req.params.userId)
+    user.active = "false";
+    user.save()
+    .then(user=>{
+        res.send(user)
+    })
+    .catch(err=>{
+        res.send(err)
+    })
+})
+
+server.put('/active/:userId', async (req, res) => {
+    const user = await User.findByPk(req.params.userId)
+    user.active = "true";
+    user.save()
+    .then(user=>{
+        res.send(user)
+    })
+    .catch(err=>{
+        res.send(err)
+    })
+})
+
 
 
 
