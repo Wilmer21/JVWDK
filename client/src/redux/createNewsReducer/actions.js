@@ -1,6 +1,5 @@
 import axios from "axios"
-import firebase from '../../firebase/index';
-import { storage } from '../../firebase/index';
+import firebase, {storage} from '../../firebase/index';
 import { CREATE_NEWS, GET_CATEGORIES, config } from '../constantes';
 
 
@@ -31,6 +30,37 @@ const addImages = (images, formval) => {
         )
       }    
 };
+
+const addImages2 = (images, newName, id, form) => {
+    const promises = images.map(image => {
+        return new Promise((resolve, reject) => {
+            const uploadImage = firebase.storage().ref().child(`/news/images/${newName}/${image.name}`).put(image);
+            uploadImage.on (
+                "state_changed",
+                snapshot => {},
+                error => {reject(error)},
+                async () => {
+                    await storage
+                        .ref(`/news/images/${newName}/`)
+                        .child(image.name)
+                        .getDownloadURL()
+                        .then(url => {
+                            resolve(form.image.push(url));
+                        });
+                }
+            );
+       });
+    });
+    Promise.all(promises)
+    .then(res => {
+        axios.put(`http://localhost:3000/news/${id}`, { form })
+        .then(res => {
+            window.location.reload(false);
+        })
+        .catch(err => console.log(err));
+    });
+};
+
 const sendImgUrl = (url, formval) => {
     const valuesToDb = {...formval};
     valuesToDb.image = url;
@@ -48,7 +78,7 @@ export const addNew = (form, images, categoryList) => dispatch => {
                 const { id } = res.data
                 console.log("AQUI ESTOY : =>".images);
                 conectionRelation(id, categoryList);
-                addImages(images, form);
+                addImages2(images, form.name, id, form);
                 dispatch({
                     type: CREATE_NEWS,
                     newNew: res.data

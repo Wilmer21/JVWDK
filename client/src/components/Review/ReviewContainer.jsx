@@ -4,16 +4,15 @@ import ReviewList from './ReviewList';
 import {Box, makeStyles, Grid} from '@material-ui/core';
 import {useParams} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {getDataReviews} from '../../redux/ReviewReducer/actions'
+import {getDataReviews} from '../../redux/reviewReducer/actions'
 
 const ReviewContainer = (props) => {
-    
     const dispatch = useDispatch();
-    var {productId} = useParams();
+    var {newsId} = useParams();
 
     //If productId is received via props: use this, else use params.
-    if (props.productId){
-        productId = props.productId
+    if (props.newsId){
+        newsId = props.newsId
     }
     
     const reviews = useSelector(state => state.reviewReducer);
@@ -28,8 +27,8 @@ const ReviewContainer = (props) => {
     const classes = useStyles();
 
     useEffect(() => {
-        dispatch(getDataReviews(productId));    
-    }, [productId, dispatch]);
+        dispatch(getDataReviews(newsId));    
+    }, [newsId, dispatch]);
 
     useEffect(() => {
         

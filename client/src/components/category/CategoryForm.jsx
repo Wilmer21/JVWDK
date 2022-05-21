@@ -4,8 +4,7 @@ import * as yup from 'yup';
 import axios from 'axios';
 import {Button, TextField, Container, makeStyles, Typography} from '@material-ui/core';
 import {DropzoneArea} from 'material-ui-dropzone';
-import firebase from '../../firebase/index';
-import { storage } from '../../firebase/index';
+import firebase , { storage } from '../../firebase/index';
 import Swal from 'sweetalert2';
 
 

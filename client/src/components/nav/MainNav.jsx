@@ -84,11 +84,11 @@ const sections = [
                     <Link className={classes.LinkHome} color="inherit" href="/" onClick={(e) => goHome(e)}>
                         <Grid container>
                             <Grid item>
-                                El
+                                NEWS
                             </Grid>
                             <Grid item>
                                 <Typography variant="h5" className={classes.toolbarTitle}>
-                                    Tiempo</Typography>
+                                    JVWDK</Typography>
                             </Grid>
                         </Grid> 
                     </Link>

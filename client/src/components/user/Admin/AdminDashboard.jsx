@@ -57,7 +57,42 @@ function AdminDashboard() {
                         </Link>
                     </Grid>
                     <Grid item lg={1} />
-                </Grid>                                
+                </Grid>
+                <Grid container spacing={4} className={styles.gridContainer} >
+                    <Grid item lg={0} />
+                    <Grid item lg={3} className={styles.card} >
+                        <Link to='/admin/users' className={styles.link} >
+                            <Card className={styles.cardShadow} >
+                                <CardMedia
+                                    className={styles.images}
+                                    
+                                />
+                                <CardContent>
+                                    <Typography variant='h5' align='center' >Lista Usuarios</Typography>
+                                    <Typography align='center' >Aqui se encuentra la lista de usuarios; activar y desactivar ademas de promover</Typography>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    </Grid>
+                    <Grid item lg={3} className={styles.card} >
+                        <Link to='/admin/categories' className={styles.link} >
+                            <Card className={styles.cardShadow} >
+                                <CardMedia
+                                    className={styles.images}
+                                    
+                                />
+                                <CardContent>
+                                    <Typography variant='h5' align='center' >Lista Categorias</Typography>
+                                    <Typography align='center' >Aqui se encuentra listado de categorias y poder eliminarlas</Typography>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    </Grid>
+                    <Grid item lg={3} className={styles.card} >
+                        
+                    </Grid>
+                    <Grid item lg={1} />
+                </Grid>                               
             </Container>
         )
     };

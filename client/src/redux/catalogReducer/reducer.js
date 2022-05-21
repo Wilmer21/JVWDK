@@ -1,4 +1,4 @@
-import {GET_PAGE_NEWS, UPDATE_FILTERS, UPDATE_PAGE} from '../constants';
+import {GET_PAGE_NEWS, UPDATE_FILTERS, UPDATE_PAGE} from '../constantes';
 
 const initialState = {
     page: 1,

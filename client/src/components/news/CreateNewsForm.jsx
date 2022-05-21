@@ -4,6 +4,8 @@ import { DropzoneArea } from 'material-ui-dropzone';
 import { Container, TextField, Typography, Button, CssBaseline, Switch, FormControlLabel, ListItemIcon, List, ListItem,
 Checkbox , ListItemText, CircularProgress } from '@material-ui/core';
 import { useFormik } from 'formik';
+import axios from 'axios';
+import firebase , { storage } from '../../firebase/index';
 import * as yup from 'yup';
 import { getCategories , addNew } from '../../redux/createNewsReducer/actions';
 import Swal from 'sweetalert2';
@@ -77,12 +79,60 @@ const CreateNewForm = ()=>{
           image: null
         },
         validationSchema: validationSchema,
-        onSubmit: values => {
-            setLoading(true);
-            dispatch(addNew(values, images, categoryList));
-            showAlert();
+        onSubmit: (values, { resetForm }) => {
+            var formValues = {...values};
+            axios.post('http://localhost:3000/news/', {form:values})
+            .then((res) => {
+                formValues.id = res.data.id;
+                conectionRelation(res.data.id,categoryList);
+                sendImages(images, formValues);
+                showAlert();
+                resetForm({values: ''});
+            })
+            // setLoading(true);
+            // dispatch(addNew(values, images, categoryList));
+            // showAlert();
         }
     });
+
+    const conectionRelation = (newId, categoryList) => {
+        categoryList.forEach(category => {
+            axios.post(`http://localhost:3000/news/${newId}/category/${category}`, null)
+            .then(res => res)
+            .catch(err => console.log(err));
+        });
+    };
+
+    const sendImages = (images, formval) => {
+        if (images || formval){
+          console.log("Start image upload");
+          const uploadTask = firebase.storage().ref().child(`/news/${formval.name}/${images[0].name}`).put(images[0]);
+          uploadTask.on(
+          
+            "state_changed",
+            snapshot => {},
+            error => {console.log(error)},
+            () => {
+              storage
+                .ref(`news/${formval.name}`)
+                .child(images[0].name)
+                .getDownloadURL()
+                .then(url => {console.log("Download url: ",url ); sendImgUrl(url, formval) })
+            }
+          )
+        }
+      }
+
+      const sendImgUrl = (url, formval) => {
+        const valuesToDb = {...formval};
+        valuesToDb.image = url;
+        console.log("Values to Db: ",valuesToDb);
+          axios.put(`http://localhost:3000/news/${valuesToDb.id}`, {form:valuesToDb})
+          .then((res) => {
+            console.log("se subio la imagen exitosamente",res);
+          })
+          .catch(error => console.log("Error on request: ",error))
+      }
 
     const form = () => {
         return (
@@ -147,16 +197,16 @@ const CreateNewForm = ()=>{
                             label="Destacado?"
                             className={style.formSwitch}
                         />
-                    <DropzoneArea
-                        acceptedFiles={['image/*']}
-                        filesLimit= {1}
-                        dropzoneText={"Drag and drop image here or click"}
-                        onChange={(files) => {
-                        //todo (Upload form on send, not just onchange, do forEach magic to upload multiple images)
-                        console.log('Files:', files)
-                        setImages(files);
-                        }}
-                    />
+                     <DropzoneArea
+                            acceptedFiles={['image/*']}
+                            filesLimit= {1}
+                            dropzoneText={"Drag and drop image here or click"}
+                            onChange={(files) => {
+                              //todo (Upload form on send, not just onchange, do forEach magic to upload multiple images)
+                              console.log('Files:', files)
+                              setImages(files);
+                            }}
+                        />
                     </Container>
                     <Button className={style.submitButton} color="primary" variant="contained" fullWidth type="submit" >
                             Subir

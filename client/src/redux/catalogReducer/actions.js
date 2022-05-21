@@ -1,4 +1,4 @@
-import {GET_PAGE_NEWS, UPDATE_FILTERS, UPDATE_PAGE} from '../constants';
+import {GET_PAGE_NEWS, UPDATE_FILTERS, UPDATE_PAGE} from '../constantes';
 import axios from 'axios';
 
 export const getPageNews = (page, pageSize, totalNews, news, filterBox) => {
@@ -16,10 +16,16 @@ export const getPageNews = (page, pageSize, totalNews, news, filterBox) => {
 
 
 export const getPaginatedNews = (page, pageSize, filterBox) => (dispatch) => {
+    console.log(" page>"+page, " pagesize>"+pageSize, " filter>"+filterBox);
+    console.log(filterBox);
     if (Array.isArray(filterBox.categories) && filterBox.categories.length >= 1){
+        console.log('aqui entro');
         const cats = filterBox.categories
+        console.log(`${[...cats]}`);
         axios.get(`http://localhost:3000/news/catalog/?page=${page}&pageSize=${pageSize}&categories=[${[...cats]}]`)
         .then(news => {
+            console.log("aqui se ejecuta la api news");
+            console.log(news);
         var totalNews = news.data.totalNews;
         dispatch(getPageNews(page, pageSize, totalNews, news, filterBox));
     })
@@ -28,6 +34,7 @@ export const getPaginatedNews = (page, pageSize, filterBox) => (dispatch) => {
     else {
         axios.get(`http://localhost:3000/news/catalog/?page=${page}&pageSize=${pageSize}`)
         .then(news => {
+            console.log(news);
         var totalNews = news.data.totalNews;
         dispatch(getPageNews(page, pageSize, totalNews, news, filterBox));
     })
